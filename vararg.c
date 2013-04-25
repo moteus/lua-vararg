@@ -1,6 +1,6 @@
 /*
 'vararg' is a Lua library for manipulation of variable arguements (vararg) of
-functions. These functions basically allows you to do things with vararg that
+functions. These functions basically allow you to do things with vararg that
 cannot be efficiently done in pure Lua but can be easily done through the C API.
 
 Actually, the main motivation for this library was the 'pack' function, which
@@ -9,17 +9,18 @@ and the praised 'apairs'. Also 'pack' allows an interesting implementaiton of
 tuples in pure Lua.
 
 p = pack(...)
-p()               --> ...
-p("#")            --> select("#", ...)
-p(i)              --> (select(i, ...))
-p(i, j)           --> table.unpack({...}, i, j)
-for i,v in p do   --> for i,v in apairs(...) do
-
-range(i, j, ...)  --> unpack({...}, i, j)
-remove(i, ...)    --> t={...} table.remove(t,i) return unpack(t,1,select("#",...)-1)
-insert(v, i, ...) --> t={...} table.insert(t,i,v) return unpack(t,1,select("#",...)+1)
-append(v, ...)    --> c=select("#",...)+1 return unpack({[c]=val,...},1,c)
-concat(f1,f2,...) --> return all the values returned by functions 'f1,f2,...'
+  p()              --> ...
+  p("#")           --> select("#", ...)
+  p(i)             --> (select(i, ...))
+  p(i, j)          --> unpack({...}, i, j)
+  for i,v in p do  --> for i,v in apairs(...) do
+range(i, j, ...)   --> unpack({...}, i, j)
+remove(i, ...)     --> t={...} table.remove(t,i) return unpack(t,1,select("#",...)-1)
+insert(v, i, ...)  --> t={...} table.insert(t,i,v) return unpack(t,1,select("#",...)+1)
+replace(v, i, ...) --> t={...} t[i]=v return unpack(t,1,select("#",...))
+append(v, ...)     --> c=select("#",...)+1 return unpack({[c]=val,...},1,c)
+map(f, ...)        --> t={} n=select("#",...) for i=1,n do t[i]=f((select(i,...))) end return unpack(t,1,n)
+concat(f1,f2,...)  --> return all the values returned by functions 'f1,f2,...'
 */
 
 #define LUA_VALIBNAME	"vararg"
@@ -78,7 +79,7 @@ static int luaVA_range(lua_State *L) {
 	e = _optindex(L, 2, n-2, 0)+2;
 	if (i > e) return 0;  /* empty range */
 	if (!lua_checkstack(L, e-n))  /* space for extra nil's */
-		luaL_error(L, "range limit is too big");
+		luaL_error(L, "range is too big");
 	lua_settop(L, e);
 	return e-i+1;
 }
@@ -131,11 +132,23 @@ static int luaVA_append(lua_State *L) {
 	return lua_gettop(L)-1;
 }
 
+static int luaVA_map(lua_State *L) {
+	int top = lua_gettop(L);
+	int i;
+	luaL_checkany(L, 1);
+	for(i=2; i<=top; ++i) {
+		lua_pushvalue(L, 1);
+		lua_pushvalue(L, i);
+		lua_call(L, 1, 1);
+		lua_replace(L, i); /* to avoid the stack to double in size */
+	}
+	return top-1;
+}
+
 static int luaVA_concat(lua_State *L) {
 	int top = lua_gettop(L);
 	int i;
-	for(i=1; i<=top; ++i)
-	{
+	for(i=1; i<=top; ++i) {
 		lua_pushvalue(L, i);
 		lua_call(L, 0, LUA_MULTRET);
 	}
@@ -149,6 +162,7 @@ static const luaL_Reg va_funcs[] = {
 	{"remove", luaVA_remove},
 	{"replace", luaVA_replace},
 	{"append", luaVA_append},
+	{"map", luaVA_map},
 	{"concat", luaVA_concat},
 	{NULL, NULL}
 };
