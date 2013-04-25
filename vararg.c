@@ -28,6 +28,14 @@ concat(f1,f2,...)  --> return all the values returned by functions 'f1,f2,...'
 #include "lua.h"
 #include "lauxlib.h"
 
+#if LUA_VERSION_NUM >= 502 
+
+static void luaL_register (lua_State *L, const char *libname, const luaL_Reg *l){
+  if(libname) lua_newtable(L);
+  luaL_setfuncs(L, l, 0);
+}
+
+#endif
 
 static int _optindex(lua_State *L, int arg, int top, int def) {
 	int idx = (def ? luaL_optint(L, arg, def) : luaL_checkint(L, arg));
