@@ -1,0 +1,38 @@
+PROJECT = 'vararg'
+
+if LUA_VER == '5.2' then
+  LUA_NEED = 'lua52'
+  LUA_DIR  = ENV.LUA_DIR_5_2 or ENV.LUA_DIR
+  LUA_RUNNER = 'lua52'
+else
+  LUA_NEED = 'lua51'
+  LUA_DIR  = ENV.LUA_DIR
+  LUA_RUNNER = 'lua'
+end
+
+ROOT    = ROOT or J(LUA_DIR,'libs',PROJECT)
+LUADIR  = LUADIR or J(ROOT, 'share')
+LIBDIR  = LIBDIR or J(ROOT, 'share')
+DYNAMIC = as_bool(DYNAMIC, false)
+
+vararg = c.shared{PROJECT, 
+  base     = '.';
+  src      = {PROJECT .. '.c'};
+  needs    = {LUA_NEED};
+  dynamic  = DYNAMIC;
+  strip    = true;
+  libflags = {IF(MSVC, '/EXPORT:luaopen_' .. PROJECT)};
+}
+
+target('build', vararg)
+
+install = target('install', {
+  file.group{odir=LIBDIR;            src = vararg      };
+  file.group{odir=J(ROOT, 'test');   src = 'test.lua'  };
+})
+
+target('test', install, function()
+  run_test("test.lua")
+end)
+
+default('build')
