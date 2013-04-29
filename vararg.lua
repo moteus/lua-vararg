@@ -6,9 +6,44 @@ local math = require "math"
 local max = math.max
 
 local table = require "table"
-local tinsert = table.insert
-local tremove = table.remove
 local unpack = table.unpack or _G.unpack
+
+local tinsert2 = function(t, n, i, v)
+	-- lua 5.2 rise error if index out of range
+	-- assert(type(t) =='table')
+	-- assert(type(n) =='number')
+	-- assert(type(i) =='number')
+	if i > n then
+		t[i] = v
+		return i
+	end
+
+	for j = n, i, -1 do
+		t[j + 1] = t[j]
+	end
+	t[i] = v
+
+	return n+1
+end
+
+local tremove2 = function(t, n, i)
+	-- lua 5.2 rise error if index out of range
+	-- assert(type(t) =='table')
+	-- assert(type(n) =='number')
+	-- assert(type(i) =='number')
+	if i > n then
+		for j = n+1, i do
+			t[j] = nil
+		end
+		return n
+	end
+
+	for j = i, n do
+		t[j] = t[j+1]
+	end
+
+	return n-1
+end
 
 local function idx(i, n, d)
 	if i == nil then
@@ -57,8 +92,7 @@ local function remove(i, ...)
 	local t = {...}
 	i = idx(i, n)
 	if i>0 and i<=n then
-		tremove(t, i)
-		n = n-1
+		n = tremove2(t, n, i)
 	end
 	return unpack(t, 1, n)
 end
@@ -68,8 +102,7 @@ local function insert(v, i, ...)
 	local t = {...}
 	i = idx(i, n)
 	if i>0 then
-		tinsert(t, i, v)
-		n = max(n+1, i)
+		n = tinsert2(t, n, i, v)
 	end
 	return unpack(t, 1, n)
 end
@@ -85,9 +118,12 @@ local function replace(v, i, ...)
 	return unpack(t, 1, n)
 end
 
-local function append(v, ...)
-	local n = select("#",...)+1
-	return unpack({[n]=v, ...}, 1, n)
+local function append(...)
+	local n = select("#",...)
+	if n <= 1 then return ... end
+	local t = {select(2, ...)}
+	t[n] = (...)
+	return unpack(t, 1, n)
 end
 
 local function map(f, ...)
@@ -106,6 +142,7 @@ local function packinto(n, t, ...)
 	end
 	return n+c
 end
+
 local function concat(...)
 	local n = 0
 	local t = {}

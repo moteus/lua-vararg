@@ -42,6 +42,10 @@ for i = 1, huge do
 		break
 	end
 end
+
+-- @fixme Lua 5.2 incorrect calculate maxstack 
+if maxstack > 255 then maxstack = 255 end
+
 for i = 1, maxstack, 2 do
 	values[i] = i
 end
