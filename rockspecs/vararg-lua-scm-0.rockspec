@@ -1,4 +1,4 @@
-package="vararg"
+package="vararg-lua"
 version="scm-0"
 source = {
    url = "https://github.com/moteus/lua-vararg/archive/master.zip",
@@ -22,6 +22,6 @@ build = {
    copy_directories = {},
    type = "builtin",
    modules = {
-      vararg = "vararg.c"
+      vararg = "vararg.lua",
    },
 }
