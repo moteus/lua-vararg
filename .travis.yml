@@ -32,7 +32,8 @@ before_install:
 install:
   - sudo luarocks make rockspecs/vararg-scm-0.rockspec
 
-script: 
+script:
+  - cd test
   - lua$LUA_SFX test.lua
 
 notifications:

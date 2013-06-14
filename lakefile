@@ -27,8 +27,8 @@ vararg = c.shared{PROJECT,
 target('build', vararg)
 
 install = target('install', {
-  file.group{odir=LIBDIR;            src = vararg      };
-  file.group{odir=J(ROOT, 'test');   src = 'test.lua'  };
+  file.group{odir=LIBDIR;            src = vararg                };
+  file.group{odir=J(ROOT, 'test');   src = J('test', 'test.lua') };
 })
 
 target('test', install, function()
