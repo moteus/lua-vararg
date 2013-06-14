@@ -91,7 +91,8 @@ local function remove(i, ...)
 	local n = select("#", ...)
 	local t = {...}
 	i = idx(i, n)
-	if i>0 and i<=n then
+	assert(i>0, "index out of bounds")
+	if i<=n then
 		n = tremove2(t, n, i)
 	end
 	return unpack(t, 1, n)
@@ -101,9 +102,8 @@ local function insert(v, i, ...)
 	local n = select("#", ...)
 	local t = {...}
 	i = idx(i, n)
-	if i>0 then
-		n = tinsert2(t, n, i, v)
-	end
+	assert(i > 0, "index out of bounds")
+	n = tinsert2(t, n, i, v)
 	return unpack(t, 1, n)
 end
 
@@ -111,10 +111,9 @@ local function replace(v, i, ...)
 	local n = select("#", ...)
 	local t = {...}
 	i = idx(i, n)
-	if i>0 then
-		t[i] = v
-		n = max(n, i)
-	end
+	assert(i > 0, "index out of bounds")
+	t[i] = v
+	n = max(n, i)
 	return unpack(t, 1, n)
 end
 
@@ -126,13 +125,15 @@ local function append(...)
 	return unpack(t, 1, n)
 end
 
-local function map(f, ...)
+local function map(...)
 	local n = select("#", ...)
+	assert(n > 0)
+	local f = ...
 	local t = {}
-	for i = 1, n do
-		t[i] = f((select(i, ...)))
+	for i = 2, n do
+		t[i-1] = f((select(i, ...)))
 	end
-	return unpack(t, 1, n)
+	return unpack(t, 1, n-1)
 end
 
 local function packinto(n, t, ...)
