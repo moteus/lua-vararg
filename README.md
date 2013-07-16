@@ -14,13 +14,13 @@ tuples in pure Lua.
 
 `args = pack(...)`
 
-|    vararg        |      lua                  |
-|------------------|---------------------------|
-| args()           | ...                       |
-| args("#")        | select("#", ...)          |
-| args(i)          | (select(i, ...))          |
-| args(i, j)       | unpack({...}, i, j)       |
-| for i,v in p do  | for i,v in ipairs{...} do |
+|    vararg           |      lua                  |
+|---------------------|---------------------------|
+| args()              | ...                       |
+| args("#")           | select("#", ...)          |
+| args(i)             | (select(i, ...))          |
+| args(i, j)          | unpack({...}, i, j)       |
+| for i,v in args do  | for i,v in ipairs{...} do |
 
 ## vararg methods
 
@@ -39,5 +39,5 @@ tappend = function(t, v)    t[#t+1] = v           return t end
 | insert(v, i, ...)  | unpack(tinsert({...},i,v),1,select("#",...)+1)           |
 | replace(v, i, ...) | unpack(tset({...}, i, v) t,1,select("#",...))            |
 | append(v, ...)     | unpack(tappend({...},v),1,select("#",...)+1)             |
-| map(f, ...)        | for i, arg in pack(...) do replace((f(arg)), i, ...) end |
+| map(f, ...)        | t={} for i, arg in pack(...) do t[i]=f(arg) end unpack(t)|
 | concat(f1,f2,...)  | return all the values returned by functions 'f1,f2,...'  |
