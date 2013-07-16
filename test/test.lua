@@ -72,7 +72,7 @@ end
 
 -- test 'pack' function --------------------------------------------------------
 
-local function testpack(...)
+local function make_testpack(pack) return function (...)
 	local v = {...}
 	local n = select("#", ...)
 	local p = pack(...)
@@ -92,14 +92,21 @@ local function testpack(...)
 			assertsame(v, i, j, p(i-n-1, j-n-1))
 		end
 	end
-end
+end end
 
-testpack()
-testpack({},{},{})
-testpack(nil)
-testpack(nil, nil)
-testpack(nil, 1, nil)
-testpack(unpack(values, 1, 254))
+make_testpack(pack)()
+make_testpack(pack)({},{},{})
+make_testpack(pack)(nil)
+make_testpack(pack)(nil, nil)
+make_testpack(pack)(nil, 1, nil)
+make_testpack(pack)(unpack(values, 1, 254))
+
+make_testpack(vararg)()
+make_testpack(vararg)({},{},{})
+make_testpack(vararg)(nil)
+make_testpack(vararg)(nil, nil)
+make_testpack(vararg)(nil, 1, nil)
+make_testpack(vararg)(unpack(values, 1, 254))
 
 local ok, err = pcall(pack, unpack(values, 1, 255))
 if ok then -- Lua version

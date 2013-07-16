@@ -154,7 +154,7 @@ local function concat(...)
 	return unpack(t, 1, n)
 end
 
-return {
+return setmetatable({
 	pack = pack,
 	range = range,
 	insert = insert,
@@ -163,4 +163,9 @@ return {
 	append = append,
 	map = map,
 	concat = concat,
-}
+},{
+	__call = function(_, ...)
+		return pack(...)
+	end
+})
+

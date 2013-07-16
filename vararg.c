@@ -163,6 +163,11 @@ static int luaVA_concat(lua_State *L) {
 	return lua_gettop(L)-top;
 }
 
+static int luaVA_call(lua_State *L) {
+	lua_remove(L, 1);
+	return luaVA_pack(L);
+}
+
 static const luaL_Reg va_funcs[] = {
 	{"pack", luaVA_pack},
 	{"range", luaVA_range},
@@ -177,5 +182,9 @@ static const luaL_Reg va_funcs[] = {
 
 LUALIB_API int luaopen_vararg(lua_State *L) {
 	luaL_register(L, LUA_VALIBNAME, va_funcs);
+	lua_newtable(L);
+	lua_pushcfunction(L, luaVA_call);
+	lua_setfield(L, -2, "__call");
+	lua_setmetatable(L, -2);
 	return 1;
 }
