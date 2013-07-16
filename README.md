@@ -41,3 +41,29 @@ tappend = function(t, v)    t[#t+1] = v           return t end
 | append(v, ...)     | unpack(tappend({...},v),1,select("#",...)+1)             |
 | map(f, ...)        | t={} for i, arg in pack(...) do t[i]=f(arg) end unpack(t)|
 | concat(f1,f2,...)  | return all the values returned by functions 'f1,f2,...'  |
+
+## Examples
+
+Pack in to array returned values from several functions
+
+```Lua
+function f(...) return ... end
+
+t = {va.concat(
+  va(f(1,2,3)),
+  va(f(4,5,6)),
+)}
+
+-- t = {1,2,3,4,5,6}
+```
+
+Write to stdout but convert values to string.
+```Lua
+function write(...)
+  return io.write(va.map(tostring, ...))
+end
+
+local hello = setmetatable({},{__tostring = function() return "Hello" end})
+
+write(hello, " world!!! ", nil, '\n')
+```
