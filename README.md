@@ -68,3 +68,9 @@ local hello = setmetatable({},{__tostring = function() return "Hello" end})
 
 write(hello, " world!!! ", nil, '\n')
 ```
+
+Parse IPv4 address
+```Lua
+local n1,n2,n3,n4 = va.map(tonumber, string.match(ip, "^(%d+)%.(%d+)%.(%d+)%.(%d+)$"))
+-- test nX as number
+```
