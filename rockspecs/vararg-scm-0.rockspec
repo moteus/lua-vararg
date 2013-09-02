@@ -19,7 +19,7 @@ dependencies = {
 }
 
 build = {
-   copy_directories = {},
+   copy_directories = {"test"},
    type = "builtin",
    modules = {
       vararg = "vararg.c"
