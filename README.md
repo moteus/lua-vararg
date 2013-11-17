@@ -74,3 +74,7 @@ Parse IPv4 address
 local n1,n2,n3,n4 = va.map(tonumber, string.match(ip, "^(%d+)%.(%d+)%.(%d+)%.(%d+)$"))
 -- test nX as number
 ```
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/moteus/lua-vararg/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
