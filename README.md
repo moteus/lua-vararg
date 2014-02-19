@@ -12,6 +12,13 @@ is an elegant alternative for the possible new standard function 'table.pack'
 and the praised 'apairs'. Also 'pack' allows an interesting implementaiton of
 tuples in pure Lua.
 
+## Changes since official `vararg` v1.1
+
+* C version supports Lua 5.2
+* Fix bugs on Lua version. Now it pass all tests.
+* Lua and C version are fully compatible (excapt error messages).
+* Use call metamethod as alias for pack method (`vararg(...)` is same as `vararg.pack(...)`)
+
 ## pack
 
 `args = pack(...)`

@@ -1,12 +1,9 @@
-local _G = require "_G"
-local error = _G.error
-local select = _G.select
-
-local math = require "math"
-local max = math.max
-
+local math  = require "math"
 local table = require "table"
-local unpack = table.unpack or _G.unpack
+
+local error, assert, select = error, assert, select
+local max, unpack = math.max, table.unpack or unpack
+local setmetatable = setmetatable
 
 local tinsert2 = function(t, n, i, v)
 	-- lua 5.2 rise error if index out of range
@@ -155,17 +152,16 @@ local function concat(...)
 end
 
 return setmetatable({
-	pack = pack,
-	range = range,
-	insert = insert,
-	remove = remove,
+	pack    = pack,
+	range   = range,
+	insert  = insert,
+	remove  = remove,
 	replace = replace,
-	append = append,
-	map = map,
-	concat = concat,
+	append  = append,
+	map     = map,
+	concat  = concat,
 },{
 	__call = function(_, ...)
 		return pack(...)
 	end
 })
-

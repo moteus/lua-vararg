@@ -28,12 +28,16 @@ concat(f1,f2,...)  --> return all the values returned by functions 'f1,f2,...'
 #include "lua.h"
 #include "lauxlib.h"
 
-#if LUA_VERSION_NUM >= 502 
+#if LUA_VERSION_NUM >= 502
+
+#ifndef luaL_register
 
 static void luaL_register (lua_State *L, const char *libname, const luaL_Reg *l){
   if(libname) lua_newtable(L);
   luaL_setfuncs(L, l, 0);
 }
+
+#endif
 
 #endif
 
@@ -169,14 +173,15 @@ static int luaVA_call(lua_State *L) {
 }
 
 static const luaL_Reg va_funcs[] = {
-	{"pack", luaVA_pack},
-	{"range", luaVA_range},
-	{"insert", luaVA_insert},
-	{"remove", luaVA_remove},
-	{"replace", luaVA_replace},
-	{"append", luaVA_append},
-	{"map", luaVA_map},
-	{"concat", luaVA_concat},
+	{ "pack",    luaVA_pack    },
+	{ "range",   luaVA_range   },
+	{ "insert",  luaVA_insert  },
+	{ "remove",  luaVA_remove  },
+	{ "replace", luaVA_replace },
+	{ "append",  luaVA_append  },
+	{ "map",     luaVA_map     },
+	{ "concat",  luaVA_concat  },
+
 	{NULL, NULL}
 };
 
