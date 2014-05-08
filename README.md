@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/moteus/lua-vararg.png?branch=master)](https://travis-ci.org/moteus/lua-vararg)
 [![Build Status](https://buildhive.cloudbees.com/job/moteus/job/lua-vararg/badge/icon)](https://buildhive.cloudbees.com/job/moteus/job/lua-vararg/)
 [![Build Status](https://moteus.ci.cloudbees.com/job/lua-vararg/badge/icon)](https://moteus.ci.cloudbees.com/job/lua-vararg/)
+[![Coverage Status](https://coveralls.io/repos/moteus/lua-vararg/badge.png?branch=master)](https://coveralls.io/r/moteus/lua-vararg?branch=master)
 
 `vararg` is a Lua library for manipulation of variable arguements (vararg) of
 functions. These functions basically allow you to do things with vararg that
