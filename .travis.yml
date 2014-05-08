@@ -11,9 +11,9 @@ env:
     - VARARG=vararg     LUA=lua5.1 LUA_DEV=liblua5.1-dev LUA_VER=5.1 LUA_SFX=5.1 LUA_INCDIR=/usr/include/lua5.1
     - VARARG=vararg     LUA=lua5.2 LUA_DEV=liblua5.2-dev LUA_VER=5.2 LUA_SFX=5.2 LUA_INCDIR=/usr/include/lua5.2
     - VARARG=vararg     LUA=luajit LUA_DEV=libluajit-5.1-dev LUA_VER=5.1 LUA_SFX=jit LUA_INCDIR=/usr/include/luajit-2.0
-    - VARARG=vararg-lua LUA=lua5.1 LUA_DEV=liblua5.1-dev LUA_VER=5.1 LUA_SFX=5.1 LUA_INCDIR=/usr/include/lua5.1
-    - VARARG=vararg-lua LUA=lua5.2 LUA_DEV=liblua5.2-dev LUA_VER=5.2 LUA_SFX=5.2 LUA_INCDIR=/usr/include/lua5.2
-    - VARARG=vararg-lua LUA=luajit LUA_DEV=libluajit-5.1-dev LUA_VER=5.1 LUA_SFX=jit LUA_INCDIR=/usr/include/luajit-2.0
+    # - VARARG=vararg-lua LUA=lua5.1 LUA_DEV=liblua5.1-dev LUA_VER=5.1 LUA_SFX=5.1 LUA_INCDIR=/usr/include/lua5.1
+    # - VARARG=vararg-lua LUA=lua5.2 LUA_DEV=liblua5.2-dev LUA_VER=5.2 LUA_SFX=5.2 LUA_INCDIR=/usr/include/lua5.2
+    # - VARARG=vararg-lua LUA=luajit LUA_DEV=libluajit-5.1-dev LUA_VER=5.1 LUA_SFX=jit LUA_INCDIR=/usr/include/luajit-2.0
 
 branches:
   only:
@@ -41,13 +41,20 @@ before_install:
   - sudo make
   - sudo make install
   - cd $TRAVIS_BUILD_DIR
+  - sudo pip install cpp-coveralls
 
 install:
-  - sudo luarocks make rockspecs/$VARARG-scm-0.rockspec
+  - sudo luarocks make rockspecs/$VARARG-scm-0.rockspec CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage"
 
 script:
   - cd test
   - lua$LUA_SFX test.lua
+
+after_success:
+  - cd $TRAVIS_BUILD_DIR
+  - if [ $VARARG = "vararg" ]; then
+      coveralls;
+    fi
 
 notifications:
   email:
