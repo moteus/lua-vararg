@@ -53,7 +53,14 @@ script:
   - lua$LUA_SFX -lluacov test.lua
 
 after_success:
-  - bash coveralls.sh
+  - cd $TRAVIS_BUILD_DIR
+  - if [ $VARARG = "vararg" ]; then
+      coveralls;
+    else
+      cd test;
+      luacov-coveralls;
+      curl --form "json_file=@luacov.report.json;type=application/json" https://coveralls.io/api/v1/jobs;
+    fi
 
 notifications:
   email:
