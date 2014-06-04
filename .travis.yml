@@ -2,7 +2,7 @@ language: erlang
 
 env:
   global:
-    - LUAROCKS_VER=2.0.13
+    - LUAROCKS_VER=2.1.0
     - LUAROCKS_BASE=luarocks-$LUAROCKS_VER
     - LUAROCKS_INSTALL=wget
     - LUAROCKS_GITTAG=master
@@ -38,14 +38,13 @@ before_install:
     fi
   - ./configure
     --lua-version=$LUA_VER --lua-suffix=$LUA_SFX --with-lua-include="$LUA_INCDIR"
-  - sudo make
+  - make build
   - sudo make install
   - cd $TRAVIS_BUILD_DIR
   - sudo pip install cpp-coveralls
 
 install:
-  - sudo luarocks install https://raw.githubusercontent.com/moteus/luacov/moteus/rockspecs/luacov-scm.mot-1.rockspec
-  - sudo luarocks install https://raw.githubusercontent.com/moteus/luacov-coveralls/master/rockspecs/luacov-coveralls-scm-0.rockspec
+  - sudo luarocks install luacov-coveralls --server=http://rocks.moonscript.org/dev
   - sudo luarocks make rockspecs/$VARARG-scm-0.rockspec CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage"
 
 script:
