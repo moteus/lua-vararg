@@ -57,7 +57,6 @@ after_success:
       coveralls;
     else
       luacov-coveralls;
-      curl --form "json_file=@luacov.report.json;type=application/json" https://coveralls.io/api/v1/jobs;
     fi
 
 notifications:
