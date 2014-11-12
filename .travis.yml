@@ -1,50 +1,34 @@
-language: erlang
+language: c
 
 env:
   global:
-    - LUAROCKS_VER=2.1.0
-    - LUAROCKS_BASE=luarocks-$LUAROCKS_VER
-    - LUAROCKS_INSTALL=wget
-    - LUAROCKS_GITTAG=master
-    # - LUAROCKS_GITTAG=v$LUAROCKS_VER
+    - LUAROCKS=2.2.0
   matrix:
-    - VARARG=vararg     LUA=lua5.1 LUA_DEV=liblua5.1-dev LUA_VER=5.1 LUA_SFX=5.1 LUA_INCDIR=/usr/include/lua5.1
-    - VARARG=vararg     LUA=lua5.2 LUA_DEV=liblua5.2-dev LUA_VER=5.2 LUA_SFX=5.2 LUA_INCDIR=/usr/include/lua5.2
-    - VARARG=vararg     LUA=luajit LUA_DEV=libluajit-5.1-dev LUA_VER=5.1 LUA_SFX=jit LUA_INCDIR=/usr/include/luajit-2.0
-    - VARARG=vararg-lua LUA=lua5.1 LUA_DEV=liblua5.1-dev LUA_VER=5.1 LUA_SFX=5.1 LUA_INCDIR=/usr/include/lua5.1
-    - VARARG=vararg-lua LUA=lua5.2 LUA_DEV=liblua5.2-dev LUA_VER=5.2 LUA_SFX=5.2 LUA_INCDIR=/usr/include/lua5.2
-    - VARARG=vararg-lua LUA=luajit LUA_DEV=libluajit-5.1-dev LUA_VER=5.1 LUA_SFX=jit LUA_INCDIR=/usr/include/luajit-2.0
+    - VARARG=vararg     LUA=lua5.1
+    - VARARG=vararg     LUA=lua5.2
+    - VARARG=vararg     LUA=lua5.3
+    - VARARG=vararg     LUA=luajit
+    - VARARG=vararg-lua LUA=lua5.1
+    - VARARG=vararg-lua LUA=lua5.2
+    - VARARG=vararg-lua LUA=lua5.3
+    - VARARG=vararg-lua LUA=luajit
 
 branches:
   only:
     - master
 
 before_install:
-  - if [ $LUA = "luajit" ]; then
-      sudo add-apt-repository ppa:mwild1/ppa -y && sudo apt-get update -y;
-    fi
-  - sudo apt-get install $LUA
-  - sudo apt-get install $LUA_DEV
-  - lua$LUA_SFX -v
-  # Install a recent luarocks release
-  - if [ $LUAROCKS_INSTALL = "git" ]; then
-      git clone https://github.com/keplerproject/luarocks.git;
-      cd luarocks;
-      git checkout $LUAROCKS_GITTAG;
-    else
-      wget http://luarocks.org/releases/$LUAROCKS_BASE.tar.gz;
-      tar zxvpf $LUAROCKS_BASE.tar.gz;
-      cd $LUAROCKS_BASE;
-    fi
-  - ./configure
-    --lua-version=$LUA_VER --lua-suffix=$LUA_SFX --with-lua-include="$LUA_INCDIR"
-  - make build
-  - sudo make install
-  - cd $TRAVIS_BUILD_DIR
+  - bash .travis/setup_lua.sh
   - sudo pip install cpp-coveralls
 
+  - git clone https://github.com/moteus/luafilesystem.git luafilesystem
+  - cd ./luafilesystem
+  - sudo luarocks make rockspecs/luafilesystem-cvs-3.rockspec
+  - cd ..
+  - sudo luarocks install lua-path --deps-mode=none
+  - sudo luarocks install luacov-coveralls
+
 install:
-  - sudo luarocks install luacov-coveralls --server=http://rocks.moonscript.org/dev
   - sudo luarocks make rockspecs/$VARARG-scm-0.rockspec CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage"
 
 script:
