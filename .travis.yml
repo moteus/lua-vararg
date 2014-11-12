@@ -38,7 +38,7 @@ script:
 after_success:
   - if [ $VARARG = "vararg" ]; then
       cd $TRAVIS_BUILD_DIR;
-      coveralls;
+      coveralls -i vararg.c;
     else
       luacov-coveralls;
     fi
