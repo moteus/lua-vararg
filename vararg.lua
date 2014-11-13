@@ -44,9 +44,16 @@ end
 
 local function idx(i, n, d)
 	if i == nil then
+		if not d then
+			return error("number expected, got nil", 2)
+		end
 		return d
-	elseif i < 0 then
+	end
+	if i < 0 then
 		i = n+i+1
+	end
+	if i <= 0 then
+		return error("index out of bounds", 2)
 	end
 	return i
 end
@@ -81,7 +88,9 @@ end
 
 local function range(i, j, ...)
 	local n = select("#", ...)
-	return unpack({...}, idx(i,n), idx(j,n))
+	i, j = idx(i,n), idx(j,n)
+	if i > j then return end
+	return unpack({...}, i, j)
 end
 
 local function remove(i, ...)
@@ -156,7 +165,10 @@ local function count(...)
 end
 
 local function at(i, ...)
-	return range(i, i, ...)
+	local n = select("#", ...)
+	i = idx(i,n)
+	if i > n then return end
+	return (select(i, ...))
 end
 
 return setmetatable({

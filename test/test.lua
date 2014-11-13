@@ -69,7 +69,7 @@ local function asserterror(expected, f, ...)
 	assert(ok == false, "error was expected")
 	if os.getenv("VARARG") ~= "vararg-lua" then
 		assert(actual:find(expected, 1, true), "wrong error, got "..actual)
-	end
+end
 end
 
 -- test 'pack' function --------------------------------------------------------
@@ -133,16 +133,15 @@ local function testrange(n, ...)
 	end
 end
 
-local ok, err = pcall(range, 0, 0, ...)
-if ok then -- Lua version
-	assert(err == nil)
-else -- C version
-	assert(ok == false and err == "bad argument #1 to '?' (index out of bounds)")
-end
+asserterror("bad argument #1 to '?' (index out of bounds)", range, 0, 0, 1,2,3)
 
 testrange(10)
 testrange(10, 1,2,3,4,5,6,7,8,9,0)
 testrange(maxstack, unpack(values, 1, maxstack))
+
+assertsame({}, 1,  1, range(1, 1))
+
+assertsame({}, 0, -1, range(2, 1))
 
 -- test other functions --------------------------------------------------------
 
