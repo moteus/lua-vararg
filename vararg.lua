@@ -168,6 +168,8 @@ return setmetatable({
 	append  = append,
 	map     = map,
 	concat  = concat,
+	count   = count,
+	at      = at,
 },{
 	__call = function(_, ...)
 		return pack(...)
