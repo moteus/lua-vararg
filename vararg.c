@@ -108,6 +108,22 @@ static int luaVA_range(lua_State *L) {
 	return e-i+1;
 }
 
+static int luaVA_at(lua_State *L) {
+	int n, i;
+	n = lua_gettop(L);
+	i = _optindex(L, 1, n-1, 0)+1;
+	if (i > n) return 0;  /* no value */
+	lua_settop(L, i);
+	return 1;
+}
+
+static int luaVA_count(lua_State *L) {
+	int n = lua_gettop(L);
+	lua_settop(L, 0);
+	lua_pushinteger(L, n);
+	return 1;
+}
+
 static int luaVA_insert(lua_State *L) {
 	int i, n;
 	n = lua_gettop(L);
@@ -193,6 +209,8 @@ static const luaL_Reg va_funcs[] = {
 	{ "append",  luaVA_append  },
 	{ "map",     luaVA_map     },
 	{ "concat",  luaVA_concat  },
+	{ "count",   luaVA_count   },
+	{ "at",      luaVA_at      },
 
 	{NULL, NULL}
 };

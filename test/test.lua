@@ -22,6 +22,8 @@ local replace = vararg.replace
 local append = vararg.append
 local concat = vararg.concat
 local map = vararg.map
+local count = vararg.count
+local at = vararg.at
 
 -- auxiliary functions----------------------------------------------------------
 
@@ -198,5 +200,18 @@ asserterror("attempt to call a nil value", concat, nil)
 asserterror("bad argument #1 to '?' (value expected)", map)
 assertsame({}, 1, 0, map(nil))
 asserterror("attempt to call a nil value", map, nil, nil)
+
+assert(0 == count())
+assert(1 == count(nil))
+assert(3 == count(nil, 2, nil))
+
+asserterror("bad argument #1 to '?' (index out of bounds)", at,  0)
+asserterror("bad argument #1 to '?' (index out of bounds)", at, -1)
+assertsame({}, 0,  -1, at(1))
+assertsame({}, 0,  -1, at(2))
+assertsame({}, 1,   1, at(1, nil))
+assertsame({}, 0,  -1, at(2, nil))
+assertsame({2}, 1,  1, at(2, 1,2,3))
+assertsame({2}, 1,  1, at(-2, 1,2,3))
 
 print("done!")

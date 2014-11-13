@@ -44,7 +44,9 @@ tappend = function(t, v)    t[#t+1] = v           return t end
 
 |    vararg          |      lua                                                 |
 |--------------------|----------------------------------------------------------|
+| count(...)         | select("#", ...)                                         |
 | range(i, j, ...)   | unpack({...}, i, j)                                      |
+| at(i, ...)         | range(i, i, ...)                                         |
 | remove(i, ...)     | unpack(tremove({...},i),1,select("#",...)-1)             |
 | insert(v, i, ...)  | unpack(tinsert({...},i,v),1,select("#",...)+1)           |
 | replace(v, i, ...) | unpack(tset({...}, i, v) t,1,select("#",...))            |

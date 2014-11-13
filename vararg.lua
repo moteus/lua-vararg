@@ -151,6 +151,14 @@ local function concat(...)
 	return unpack(t, 1, n)
 end
 
+local function count(...)
+	return select("#", ...)
+end
+
+local function at(i, ...)
+	return range(i, i, ...)
+end
+
 return setmetatable({
 	pack    = pack,
 	range   = range,
