@@ -19,6 +19,8 @@ tuples in pure Lua.
 * Fix bugs on Lua version. Now it pass all tests.
 * Lua and C version are fully compatible (excapt error messages).
 * Use call metamethod as alias for pack method (`vararg(...)` is same as `vararg.pack(...)`)
+* Add `va.count` function
+* Add `va.at` function
 
 ## pack
 
