@@ -21,6 +21,8 @@ replace(v, i, ...) --> t={...} t[i]=v return unpack(t,1,select("#",...))
 append(v, ...)     --> c=select("#",...)+1 return unpack({[c]=val,...},1,c)
 map(f, ...)        --> t={} n=select("#",...) for i=1,n do t[i]=f((select(i,...))) end return unpack(t,1,n)
 concat(f1,f2,...)  --> return all the values returned by functions 'f1,f2,...'
+count(...)         --> select("#", ...)
+at(i, ...)         --> if select("#", ...) >= i then rutrn (select(i, ...)) end
 */
 
 #define LUA_VALIBNAME	"vararg"
