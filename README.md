@@ -49,10 +49,10 @@ tappend = function(t, v)    t[#t+1] = v           return t end
 | count(...)         | select("#", ...)                                         |
 | range(i, j, ...)   | unpack({...}, i, j)                                      |
 | at(i, ...)         | range(i, i, ...)                                         |
-| remove(i, ...)     | unpack(tremove({...},i),1,select("#",...)-1)             |
-| insert(v, i, ...)  | unpack(tinsert({...},i,v),1,select("#",...)+1)           |
-| replace(v, i, ...) | unpack(tset({...}, i, v) t,1,select("#",...))            |
-| append(v, ...)     | unpack(tappend({...},v),1,select("#",...)+1)             |
+| remove(i, ...)     | unpack(tremove({...},i),1,count(...)-1)                  |
+| insert(v, i, ...)  | unpack(tinsert({...},i,v),1,count(...)+1)                |
+| replace(v, i, ...) | unpack(tset({...}, i, v) t,1,count(...))                 |
+| append(v, ...)     | unpack(tappend({...},v),1,count(...)+1)                  |
 | map(f, ...)        | t={} for i, arg in pack(...) do t[i]=f(arg) end unpack(t)|
 | concat(f1,f2,...)  | return all the values returned by functions 'f1,f2,...'  |
 
