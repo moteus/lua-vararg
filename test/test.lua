@@ -25,6 +25,9 @@ local map = vararg.map
 local count = vararg.count
 local at = vararg.at
 
+local LUA_VER_MAJ, LUA_VER_MIN = string.match(_VERSION, "(%d+)%.(%d+)")
+local LUA_VER = LUA_VER_MAJ * 100 + LUA_VER_MIN
+
 -- auxiliary functions----------------------------------------------------------
 
 local values = {}
@@ -68,8 +71,15 @@ local function asserterror(expected, f, ...)
 	local ok, actual = pcall(f, ...)
 	assert(ok == false, "error was expected")
 	if os.getenv("VARARG") ~= "vararg-lua" then
-		assert(actual:find(expected, 1, true), "wrong error, got "..actual)
-end
+		if LUA_VER >= 503 then
+			-- Lua 5.3 pass function names instead question mark
+			expected = string.gsub(expected, "'%?'", "'.-'")
+			expected = string.gsub(expected, "([%(%)])", "%%%1")
+			assert(actual:find(expected), "wrong error, got "..actual)
+		else
+			assert(actual:find(expected, 1, true), "wrong error, got "..actual)
+		end
+	end
 end
 
 -- test 'pack' function --------------------------------------------------------

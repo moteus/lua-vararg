@@ -3,6 +3,9 @@ version: 0.1.2.{build}
 environment:
   matrix:
   - LUA: "lua 5.1"
+    VARARG: vararg
+  - LUA: "lua 5.1"
+    VARARG: vararg-lua
   # - LUA: "lua 5.2"
   # - LUA: "lua 5.3"
 
@@ -14,11 +17,6 @@ platform:
 matrix:
   allow_failures:
     - platform: mingw
-
-environment:
-  matrix:
-    - VARARG: vararg
-    - VARARG: vararg-lua
 
 cache:
   - c:\hererocks -> appveyor.yml
