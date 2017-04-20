@@ -1,36 +1,58 @@
+
 language: c
 
+python:
+  - "2.7"
+
+sudo: false
+
+matrix:
+  include:
+    - compiler: ": Lua51"
+      env: LUA="lua 5.1"
+    - compiler: ": Lua52"
+      env: LUA="lua 5.2"
+    - compiler: ": Lua53"
+      env: LUA="lua 5.3"
+    - compiler: ": LuaJIT20"
+      env: LUA="luajit 2.0"
+    - compiler: ": LuaJIT21"
+      env: LUA="luajit 2.1"
+
 env:
-  global:
-    - LUAROCKS=2.2.0
   matrix:
-    - VARARG=vararg     LUA=lua5.1
-    - VARARG=vararg     LUA=lua5.2
-    - VARARG=vararg     LUA=lua5.3
-    - VARARG=vararg     LUA=luajit
-    - VARARG=vararg-lua LUA=lua5.1
-    - VARARG=vararg-lua LUA=lua5.2
-    - VARARG=vararg-lua LUA=lua5.3
-    - VARARG=vararg-lua LUA=luajit
+    - VARARG=vararg
+    - VARARG=vararg-lua
+
+cache:
+  directories:
+    - here
+    - $HOME/.cache/pip
 
 branches:
   only:
     - master
 
 before_install:
-  - bash .travis/setup_lua.sh
-  - sudo pip install cpp-coveralls
-
-  - sudo luarocks install luafilesystem --from=https://rocks.moonscript.org/dev
-  - sudo luarocks install lua-path --deps-mode=none
-  - sudo luarocks install luacov-coveralls
+  - export CC=gcc
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export PATH=$PATH:~/Library/Python/2.7/bin/; fi
+  - pip install --user hererocks
+  - hererocks here -r^ --$LUA
+  - export PATH=$PATH:$PWD/here/bin
+  - pip install --user cpp-coveralls
 
 install:
-  - sudo luarocks make rockspecs/$VARARG-scm-0.rockspec CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage"
+  - luarocks make rockspecs/$VARARG-scm-0.rockspec CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage"
+
+before_script:
+  - luarocks show luafilesystem    > /dev/null 2>&1 || luarocks install luafilesystem
+  - luarocks show lua-path         > /dev/null 2>&1 || luarocks install lua-path
+  - luarocks show lua-curl         > /dev/null 2>&1 || luarocks install lua-curl
+  - luarocks show luacov-coveralls > /dev/null 2>&1 || luarocks install luacov-coveralls
 
 script:
   - cd test
-  - lua$LUA_SFX -lluacov test.lua
+  - lua -lluacov test.lua
 
 after_success:
   - if [ $VARARG = "vararg" ]; then
