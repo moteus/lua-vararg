@@ -1,0 +1,48 @@
+version: 0.1.2.{build}
+
+environment:
+  matrix:
+  - LUA: "lua 5.1"
+  # - LUA: "lua 5.2"
+  # - LUA: "lua 5.3"
+
+platform:
+  - x64
+  # - x86
+  # - mingw
+
+matrix:
+  allow_failures:
+    - platform: mingw
+
+environment:
+  matrix:
+    - VARARG: vararg
+    - VARARG: vararg-lua
+
+cache:
+  - c:\hererocks -> appveyor.yml
+  - c:\external -> appveyor.yml
+
+before_build:
+  - set PATH=C:\Python27\Scripts;%PATH%
+  - pip install hererocks
+  - if /I "%platform%"=="x86" set HR_TARGET=vs_32
+  - if /I "%platform%"=="x64" set HR_TARGET=vs_64
+  - if /I "%platform%"=="mingw" set HR_TARGET=mingw
+  - if /I "%platform%"=="mingw" set PATH=C:\MinGW\bin;%PATH%
+  - hererocks env --%LUA% --target %HR_TARGET% -rlatest
+  - call env\bin\activate
+
+build_script:
+  - luarocks make rockspecs/$VARARG-scm-0.rockspec
+
+before_test:
+  - luarocks show luafilesystem    > nul 2>&1 || luarocks install luafilesystem
+  - luarocks show lua-path         > nul 2>&1 || luarocks install lua-path
+  - luarocks show lua-curl         > nul 2>&1 || luarocks install lua-curl
+  - luarocks show luacov-coveralls > nul 2>&1 || luarocks install luacov-coveralls
+
+test_script:
+  - cd test
+  - lua -lluacov test.lua

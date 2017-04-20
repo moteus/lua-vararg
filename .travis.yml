@@ -9,20 +9,25 @@ sudo: false
 matrix:
   include:
     - compiler: ": Lua51"
-      env: LUA="lua 5.1"
+      env: LUA="lua 5.1" VARARG=vararg
     - compiler: ": Lua52"
-      env: LUA="lua 5.2"
+      env: LUA="lua 5.2" VARARG=vararg
     - compiler: ": Lua53"
-      env: LUA="lua 5.3"
+      env: LUA="lua 5.3" VARARG=vararg
     - compiler: ": LuaJIT20"
-      env: LUA="luajit 2.0"
+      env: LUA="luajit 2.0" VARARG=vararg
     - compiler: ": LuaJIT21"
-      env: LUA="luajit 2.1"
-
-env:
-  matrix:
-    - VARARG=vararg
-    - VARARG=vararg-lua
+      env: LUA="luajit 2.1" VARARG=vararg
+    - compiler: ": Lua51"
+      env: LUA="lua 5.1" VARARG=vararg-lua
+    - compiler: ": Lua52"
+      env: LUA="lua 5.2" VARARG=vararg-lua
+    - compiler: ": Lua53"
+      env: LUA="lua 5.3" VARARG=vararg-lua
+    - compiler: ": LuaJIT20"
+      env: LUA="luajit 2.0" VARARG=vararg-lua
+    - compiler: ": LuaJIT21"
+      env: LUA="luajit 2.1" VARARG=vararg-lua
 
 cache:
   directories:
