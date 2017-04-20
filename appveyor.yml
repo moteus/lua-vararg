@@ -6,13 +6,19 @@ environment:
     VARARG: vararg
   - LUA: "lua 5.1"
     VARARG: vararg-lua
-  # - LUA: "lua 5.2"
-  # - LUA: "lua 5.3"
+  - LUA: "lua 5.2"
+    VARARG: vararg
+  - LUA: "lua 5.2"
+    VARARG: vararg-lua
+  - LUA: "lua 5.3"
+    VARARG: vararg
+  - LUA: "lua 5.3"
+    VARARG: vararg-lua
 
 platform:
   - x64
   # - x86
-  # - mingw
+  - mingw
 
 matrix:
   allow_failures:
@@ -33,14 +39,14 @@ before_build:
   - call env\bin\activate
 
 build_script:
-  - luarocks make rockspecs/$VARARG-scm-0.rockspec
+  - luarocks make rockspecs/%VARARG%-scm-0.rockspec
 
 before_test:
-  - luarocks show luafilesystem    > nul 2>&1 || luarocks install luafilesystem
-  - luarocks show lua-path         > nul 2>&1 || luarocks install lua-path
-  - luarocks show lua-curl         > nul 2>&1 || luarocks install lua-curl
-  - luarocks show luacov-coveralls > nul 2>&1 || luarocks install luacov-coveralls
+  # - luarocks show luafilesystem    > nul 2>&1 || luarocks install luafilesystem
+  # - luarocks show lua-path         > nul 2>&1 || luarocks install lua-path
+  # - luarocks show lua-curl         > nul 2>&1 || luarocks install lua-curl
+  # - luarocks show luacov-coveralls > nul 2>&1 || luarocks install luacov-coveralls
 
 test_script:
   - cd test
-  - lua -lluacov test.lua
+  - lua test.lua
