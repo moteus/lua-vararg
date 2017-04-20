@@ -1,4 +1,4 @@
-##Unofficial repositary of [vararg](http://www.tecgraf.puc-rio.br/~maia/lua/vararg)
+## Unofficial repositary of [vararg](http://www.tecgraf.puc-rio.br/~maia/lua/vararg)
 [![Build Status](https://travis-ci.org/moteus/lua-vararg.png?branch=master)](https://travis-ci.org/moteus/lua-vararg)
 [![Build Status](https://buildhive.cloudbees.com/job/moteus/job/lua-vararg/badge/icon)](https://buildhive.cloudbees.com/job/moteus/job/lua-vararg/)
 [![Build Status](https://moteus.ci.cloudbees.com/job/lua-vararg/badge/icon)](https://moteus.ci.cloudbees.com/job/lua-vararg/)
@@ -87,7 +87,4 @@ Parse IPv4 address
 local n1,n2,n3,n4 = va.map(tonumber, string.match(ip, "^(%d+)%.(%d+)%.(%d+)%.(%d+)$"))
 -- test nX as number
 ```
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/moteus/lua-vararg/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
