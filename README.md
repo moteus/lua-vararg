@@ -15,7 +15,7 @@ tuples in pure Lua.
 
 ## Changes since official `vararg` v1.1
 
-* C version supports Lua 5.2
+* C version supports Lua 5.2/5.3
 * Fix bugs on Lua version. Now it pass all tests.
 * Lua and C version are fully compatible (excapt error messages).
 * Use call metamethod as alias for pack method (`vararg(...)` is same as `vararg.pack(...)`)
@@ -57,6 +57,19 @@ tappend = function(t, v)    t[#t+1] = v           return t end
 | concat(f1,f2,...)  | return all the values returned by functions 'f1,f2,...'  |
 
 ## Examples
+
+Implement basic `bind` function
+
+```Lua
+function bind(f, ...)
+  local args = va(...)
+  return function(...)
+    return f(va.concat(args, va(...))
+  end
+end
+debug_print = bint(print, '[debug]')
+debug_print('hello')
+```
 
 Pack in to array returned values from several functions
 
