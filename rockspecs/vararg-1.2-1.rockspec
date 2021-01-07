@@ -1,9 +1,12 @@
+rockspec_format = "3.0"
 package="vararg"
 version="1.2-1"
+
 source = {
    url = "https://github.com/moteus/lua-vararg/archive/v1.2.zip",
    dir = "lua-vararg-1.2",
 }
+
 description = {
    summary = "Manipulation of variable arguments",
    detailed = [[
@@ -14,6 +17,7 @@ description = {
    homepage = "http://www.tecgraf.puc-rio.br/~maia/lua/vararg/",
    license = "MIT/X11"
 }
+
 dependencies = {
    "lua >= 5.1, < 5.4"
 }
@@ -24,4 +28,9 @@ build = {
    modules = {
       vararg = "vararg.c"
    },
+}
+
+test = {
+   type = "command",
+   script = "test/test.lua",
 }

@@ -14,6 +14,10 @@ environment:
     VARARG: vararg
   - LUA: "lua 5.3"
     VARARG: vararg-lua
+  - LUA: "lua 5.4"
+    VARARG: vararg
+  - LUA: "lua 5.4"
+    VARARG: vararg-lua
 
 platform:
   - x64
