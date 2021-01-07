@@ -59,7 +59,7 @@ before_install:
   - source here/bin/activate
 
 install:
-  - luarocks make rockspecs/$VARARG-scm-0.rockspec CFLAGS="$LCURL_CC_FLAGS" LIBFLAG="$LCURL_LD_FLAGS"
+  - luarocks make rockspecs/$VARARG-scm-0.rockspec CFLAGS="$LVA_CC_FLAGS" LIBFLAG="$LVA_LD_FLAGS"
 
 before_script:
   - luarocks show luacov > /dev/null 2>&1 || luarocks install luacov
