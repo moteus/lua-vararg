@@ -6,28 +6,39 @@ python:
 
 sudo: false
 
+env:
+  global:
+    - LVA_CC_FLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs"
+    - LVA_LD_FLAGS="-shared --coverage"
+
 matrix:
   include:
-    - compiler: ": Lua51"
-      env: LUA="lua 5.1" VARARG=vararg
-    - compiler: ": Lua52"
-      env: LUA="lua 5.2" VARARG=vararg
-    - compiler: ": Lua53"
-      env: LUA="lua 5.3" VARARG=vararg
-    - compiler: ": LuaJIT20"
-      env: LUA="luajit 2.0" VARARG=vararg
-    - compiler: ": LuaJIT21"
-      env: LUA="luajit 2.1" VARARG=vararg
-    - compiler: ": Lua51"
-      env: LUA="lua 5.1" VARARG=vararg-lua
-    - compiler: ": Lua52"
-      env: LUA="lua 5.2" VARARG=vararg-lua
-    - compiler: ": Lua53"
-      env: LUA="lua 5.3" VARARG=vararg-lua
-    - compiler: ": LuaJIT20"
-      env: LUA="luajit 2.0" VARARG=vararg-lua
-    - compiler: ": LuaJIT21"
-      env: LUA="luajit 2.1" VARARG=vararg-lua
+    - env: LUA="lua 5.1" VARARG=vararg
+      os: osx
+    - env: LUA="lua 5.1" VARARG=vararg
+      os: linux
+    - env: LUA="lua 5.2" VARARG=vararg
+      os: linux
+    - env: LUA="lua 5.3" VARARG=vararg
+      os: linux
+    - env: LUA="lua 5.4" VARARG=vararg
+      os: linux
+    - env: LUA="luajit 2.0" VARARG=vararg
+      os: linux
+    - env: LUA="luajit 2.1" VARARG=vararg
+      os: linux
+    - env: LUA="lua 5.1" VARARG=vararg-lua
+      os: linux
+    - env: LUA="lua 5.2" VARARG=vararg-lua
+      os: linux
+    - env: LUA="lua 5.3" VARARG=vararg-lua
+      os: linux
+    - env: LUA="lua 5.4" VARARG=vararg-lua
+      os: linux
+    - env: LUA="luajit 2.0" VARARG=vararg-lua
+      os: linux
+    - env: LUA="luajit 2.1" VARARG=vararg-lua
+      os: linux
 
 cache:
   directories:
@@ -37,29 +48,31 @@ cache:
 branches:
   only:
     - master
+    - curl_mime
 
 before_install:
-  - export CC=gcc
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export PATH=$PATH:~/Library/Python/2.7/bin/; fi
-  - pip install --user hererocks
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export LVA_LD_FLAGS="-bundle -undefined dynamic_lookup -all_load --coverage"; fi
+  - pip2 install --user cpp-coveralls
+  - pip2 install --user hererocks
   - hererocks here -r^ --$LUA
-  - export PATH=$PATH:$PWD/here/bin
-  - pip install --user cpp-coveralls
+  - source here/bin/activate
 
 install:
-  - luarocks make rockspecs/$VARARG-scm-0.rockspec CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage"
+  - luarocks make rockspecs/$VARARG-scm-0.rockspec CFLAGS="$LVA_CC_FLAGS" LIBFLAG="$LVA_LD_FLAGS"
 
 before_script:
-  - luarocks show luafilesystem    > /dev/null 2>&1 || luarocks install luafilesystem
-  - luarocks show lua-path         > /dev/null 2>&1 || luarocks install lua-path
-  - luarocks show lua-curl         > /dev/null 2>&1 || luarocks install lua-curl
-  - luarocks show luacov-coveralls > /dev/null 2>&1 || luarocks install luacov-coveralls
+  - luarocks show luacov > /dev/null 2>&1 || luarocks install luacov
 
 script:
   - cd test
   - lua -lluacov test.lua
 
 after_success:
+  - luarocks show luafilesystem    > /dev/null 2>&1 || luarocks install luafilesystem
+  - luarocks show lua-path         > /dev/null 2>&1 || luarocks install lua-path
+  - luarocks show lua-curl         > /dev/null 2>&1 || luarocks install lua-curl
+  - luarocks show luacov-coveralls > /dev/null 2>&1 || luarocks install luacov-coveralls
   - if [ $VARARG = "vararg" ]; then
       cd $TRAVIS_BUILD_DIR;
       coveralls -i vararg.c;

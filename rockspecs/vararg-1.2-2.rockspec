@@ -1,9 +1,11 @@
 package="vararg"
-version="scm-0"
+version="1.2-2"
+
 source = {
-   url = "https://github.com/moteus/lua-vararg/archive/master.zip",
-   dir = "lua-vararg-master",
+   url = "https://github.com/moteus/lua-vararg/archive/v1.2.zip",
+   dir = "lua-vararg-1.2",
 }
+
 description = {
    summary = "Manipulation of variable arguments",
    detailed = [[
@@ -14,6 +16,7 @@ description = {
    homepage = "http://www.tecgraf.puc-rio.br/~maia/lua/vararg/",
    license = "MIT/X11"
 }
+
 dependencies = {
    "lua >= 5.1, < 5.5"
 }
