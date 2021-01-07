@@ -1,4 +1,3 @@
-rockspec_format = "3.0"
 package="vararg"
 version="1.2-2"
 
@@ -28,9 +27,4 @@ build = {
    modules = {
       vararg = "vararg.c"
    },
-}
-
-test = {
-   type = "command",
-   script = "test/test.lua",
 }
